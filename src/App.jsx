@@ -1,43 +1,34 @@
 import unsplash from "./unsplash_config";
 import { useState, useEffect } from "react";
+import { Header, Image } from "./components";
+import { useSearchTerm } from "./context/SearchContext";
 import "./App.css";
 
 function App() {
-  const [catPic, setCatPic] = useState([]);
+  const {picType} = useSearchTerm();
+  const [pic, setPic] = useState([])
 
-  async function getPic() {
+  async function getPic(picType) {
     await unsplash.search
-      .getPhotos({ query: "cat", page: 1, perPage: 5 })
-      .then((res) => setCatPic(res.response.results))
-      .then((err) => console.log("this is err", err));
+      .getPhotos({ query: picType || "cat", page: 1, perPage: 5 })
+      .then((res) => setPic(res.response.results))
+      // .then((err) => console.log("this is err", err));
   }
 
   useEffect(() => {
-    getPic();
-  }, []);
+    getPic(picType);
+  }, [picType]);
 
   useEffect(() => {
-    console.log(catPic);
-  }, [catPic]);
+    console.log(picType);
+  }, [picType]);
 
   return (
     <div className="App">
-      {catPic.map((pic) => {
+    <Header title="Cat" />
+      {pic.map((pic) => {
         return (
-          <div
-            key={pic.id}
-            style={{
-              padding: "3rem",
-              backgroundColor: pic.color,
-              border: "7px solid hlsa(0 0 0 0.2)",
-            }}
-          >
-            <img
-              src={pic.urls.small}
-              alt={pic.urls.alt_description}
-              style={{ border: "7px solid hlsa(0 0 0 0.2)" }}
-            />
-          </div>
+          <Image key={pic.id} color={pic.color} urls={pic.urls} alt_description={pic.alt_description} />
         );
       })}
     </div>
