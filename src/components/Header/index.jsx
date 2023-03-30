@@ -3,7 +3,7 @@ import { useSearchTerm } from "../../context/SearchContext";
 
 export default function Header() {
   const { picType } = useSearchTerm();
-  const title = picType[0].toUpperCase() + picType.slice(1)
+  const title = picType[0]?.toUpperCase() + picType.slice(1)
   return (
     <div>
       <h1
@@ -11,7 +11,7 @@ export default function Header() {
           marginBottom: 15,
         }}
       >
-        Awesome {title} Pics
+        Awesome {picType ? title : "Cat"} Pics
       </h1>
       <SearchBar />
     </div>
